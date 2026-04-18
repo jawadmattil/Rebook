@@ -55,4 +55,4 @@ The application follows a premium "Glassmorphic" design language, featuring:
 
 ---
 
-Created with ❤️ by Antigravity.
+Created with ❤️ by Jawad Mattil
