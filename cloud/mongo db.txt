@@ -1,0 +1,21 @@
+mongo db 
+
+cluster name : Rebook
+ 	username :muhammedjawadmattil786_db_user
+	password :JU3fi7r9SjCwWSzN
+
+users:
+
+1. Admin:
+  	user id : demo@rebook.com
+  	password : 12345678
+2. Jawad
+	user id : muhammedjawadmattil786@gmail.com
+  	password : Jawad@2004
+
+
+
+
+Main Admin mail: admin@rebook.com
+password :12345678
+admin name : Jawad Mattil
