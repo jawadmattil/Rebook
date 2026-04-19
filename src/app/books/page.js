@@ -23,6 +23,7 @@ function BooksContent() {
   const [maxDistance, setMaxDistance] = useState("50");
   const [showFilters, setShowFilters] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     if (localStorage.getItem("rebook_user")) {
@@ -289,6 +290,7 @@ function BooksContent() {
             filteredBooks.map((book, i) => (
               <div key={i} onClick={() => {
                 setSelectedBook(book);
+                setCurrentImageIndex(0);
                 try {
                   const allBooks = JSON.parse(localStorage.getItem("rebook_books") || "[]");
                   const updatedBooks = allBooks.map(b => {
@@ -322,14 +324,19 @@ function BooksContent() {
                   fontSize: '1.5rem',
                   textShadow: '0 2px 4px rgba(0,0,0,0.5)'
                 }}>
-                  {book.cover ? (
-                    <Image 
+                  {book.photos && book.photos.length > 0 ? (
+                    <img 
+                      src={book.photos[0]} 
+                      alt={book.title} 
+                      style={{ objectFit: 'cover', width: '100%', height: '100%' }} 
+                      className="book-cover-img"
+                    />
+                  ) : book.cover ? (
+                    <img 
                       src={book.cover} 
                       alt={book.title} 
-                      fill 
-                      style={{ objectFit: 'cover' }} 
+                      style={{ objectFit: 'cover', width: '100%', height: '100%' }} 
                       className="book-cover-img"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                     />
                   ) : (
                     <span>No Cover Uploaded</span>
@@ -418,12 +425,38 @@ function BooksContent() {
             </button>
             <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%', overflowY: 'auto' }}>
               <div style={{ flex: '1 1 350px', position: 'relative', minHeight: '400px', background: 'linear-gradient(45deg, var(--color-primary-light), var(--color-secondary))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '2rem' }}>
-                {selectedBook.cover ? (
-                  <Image 
+                {selectedBook.photos && selectedBook.photos.length > 0 ? (
+                  <>
+                    <img 
+                      src={selectedBook.photos[currentImageIndex]} 
+                      alt={`${selectedBook.title} - Image ${currentImageIndex + 1}`} 
+                      style={{ objectFit: 'cover', width: '100%', height: '100%', position: 'absolute', inset: 0 }} 
+                    />
+                    {selectedBook.photos.length > 1 && (
+                      <>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setCurrentImageIndex((prev) => prev === 0 ? selectedBook.photos.length - 1 : prev - 1); }}
+                          style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none', borderRadius: '50%', width: '40px', height: '40px', cursor: 'pointer', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', backdropFilter: 'blur(4px)' }}>
+                          ‹
+                        </button>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setCurrentImageIndex((prev) => prev === selectedBook.photos.length - 1 ? 0 : prev + 1); }}
+                          style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none', borderRadius: '50%', width: '40px', height: '40px', cursor: 'pointer', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', backdropFilter: 'blur(4px)' }}>
+                          ›
+                        </button>
+                        <div style={{ position: 'absolute', bottom: '15px', display: 'flex', gap: '8px', zIndex: 10 }}>
+                          {selectedBook.photos.map((_, idx) => (
+                            <div key={idx} style={{ width: '10px', height: '10px', borderRadius: '50%', background: idx === currentImageIndex ? 'white' : 'rgba(255,255,255,0.5)', cursor: 'pointer', transition: 'background 0.3s', boxShadow: '0 2px 4px rgba(0,0,0,0.5)' }} onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(idx); }} />
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </>
+                ) : selectedBook.cover ? (
+                  <img 
                     src={selectedBook.cover} 
                     alt={selectedBook.title} 
-                    fill 
-                    style={{ objectFit: 'cover' }} 
+                    style={{ objectFit: 'cover', width: '100%', height: '100%', position: 'absolute', inset: 0 }} 
                   />
                 ) : (
                   <div style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)', textAlign: 'center', padding: '1rem' }}>{selectedBook.title}<br/><span style={{ fontSize: '1rem', opacity: 0.8 }}>No cover image</span></div>
